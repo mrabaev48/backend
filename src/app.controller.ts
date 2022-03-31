@@ -1,14 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import {SpotifyEntity} from "./app.model";
+import { Position } from './position/position.model';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  async scrape(): Promise<SpotifyEntity[]> {
-    // return await this.appService.scrapeSpotifyData();
+  async scrape(): Promise<Position[]> {
     return this.appService.scrapeSpotifyData();
   }
 }
