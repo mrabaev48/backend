@@ -8,6 +8,7 @@ export class AppController {
 
   @Get()
   async scrape(): Promise<SpotifyEntity[]> {
-    return await this.appService.scrapeSpotifyData();
+    // return await this.appService.scrapeSpotifyData();
+    return this.appService.scrapeSpotifyData();
   }
 }

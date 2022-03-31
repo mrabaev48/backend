@@ -15,7 +15,7 @@ export class SpotifyScraper implements IScraper<Promise<SpotifyEntity[]>> {
         return await this.getPosts();
     }
 
-    private static scrapeMainPage(cheerioElem: cheerio.Element, $: cheerio.Root) {
+    private static scrapeMainPage(cheerioElem: cheerio.Element, $: cheerio.CheerioAPI) {
         const applyButtonURL = $('.posting-btn-submit', cheerioElem).attr('href');
         const title = $('h5', cheerioElem).text();
         const location = $('.sort-by-location', cheerioElem).text();
@@ -27,20 +27,20 @@ export class SpotifyScraper implements IScraper<Promise<SpotifyEntity[]>> {
     }
 
     private async getPosts(): Promise<SpotifyEntity[]> {
-        let promiseAll: Array<Promise<SpotifyEntity>> = []
+        let promisesToResolve: Array<Promise<SpotifyEntity>> = []
         try {
             const response = await axios.get(this.url);
             const $ = cheerio.load(response.data);
             const postElems = $('.posting').toArray();
             postElems.forEach(post => {
                 const entity = SpotifyScraper.scrapeMainPage(post, $);
-                promiseAll.push(SpotifyScraper.getPostDescription(entity));
+                promisesToResolve.push(SpotifyScraper.getPostDescription(entity));
             });
 
         } catch (error) {
             console.log(error)
         }
-        return await Promise.all(promiseAll);
+        return await Promise.all(promisesToResolve);
     }
 
     private static async getPostDescription(entity: SpotifyEntity): Promise<SpotifyEntity> {
