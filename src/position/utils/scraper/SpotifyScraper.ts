@@ -2,7 +2,8 @@ import { IScraper } from './IScraper';
 
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { Position } from '../../position/position.model';
+import { Position } from '../../position.model';
+import {DescriptionConstants} from "./DescriptionConstants";
 
 export class SpotifyScraper implements IScraper<Promise<Position[]>> {
   url: string;
@@ -15,7 +16,7 @@ export class SpotifyScraper implements IScraper<Promise<Position[]>> {
     return await this.getPosts();
   }
 
-  private static scrapeMainPage(
+  private scrapeMainData(
     cheerioElem: cheerio.Element,
     $: cheerio.CheerioAPI,
   ) {
@@ -26,6 +27,7 @@ export class SpotifyScraper implements IScraper<Promise<Position[]>> {
       applyButtonURL,
       title,
       location,
+      description: '',
     } as Position;
   }
 
@@ -36,7 +38,7 @@ export class SpotifyScraper implements IScraper<Promise<Position[]>> {
       const $ = cheerio.load(response.data);
       const postElems = $('.posting').toArray();
       postElems.forEach((post) => {
-        const entity = SpotifyScraper.scrapeMainPage(post, $);
+        const entity = this.scrapeMainData(post, $);
         promisesToResolve.push(SpotifyScraper.getPostDescription(entity));
       });
     } catch (error) {
@@ -49,8 +51,32 @@ export class SpotifyScraper implements IScraper<Promise<Position[]>> {
     try {
       const response = await axios.get(entity.applyButtonURL);
       const $ = cheerio.load(response.data);
-      const scriptBody = $('script[type="application/ld+json"]').html();
-      entity.description = JSON.parse(scriptBody)['description'];
+      const content = $('.content');
+      const div = content.children('div').toArray()[1];
+      const parts = $(div).children('.page-centered').slice(0, 5);
+      const descriptionParts: string[] = [];
+      parts.toArray().forEach(part => {
+        const isHeadingExists = $('h3', part).toArray().length !== 0;
+        if (!isHeadingExists) {
+          $('div', part).toArray().forEach(x =>{
+            descriptionParts.push($(x).text());
+          });
+
+          descriptionParts.push(DescriptionConstants.END_OF_PARAGRAPH);
+        } else {
+          const subtitle = $('h3', part).text();
+          descriptionParts.push(subtitle);
+          descriptionParts.push(DescriptionConstants.END_OF_SUBTITLE);
+          $('li', part).toArray().forEach(listItem => {
+            descriptionParts.push($(listItem).text())
+            descriptionParts.push(DescriptionConstants.END_OF_LIST_ITEM);
+          });
+          descriptionParts.push(DescriptionConstants.END_OF_PARAGRAPH);
+        }
+      });
+
+      entity.description = descriptionParts.join('\n');
+
     } catch (error) {
       console.log(error);
     }

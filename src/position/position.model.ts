@@ -1,4 +1,6 @@
 import { Column, DataType, Table, Model } from 'sequelize-typescript';
+import {DataTypes} from "sequelize";
+import {Field, ID, ObjectType} from "@nestjs/graphql";
 
 interface PositionCreation {
   title: string;
@@ -7,8 +9,10 @@ interface PositionCreation {
   description: string;
 }
 
-@Table({ tableName: 'Positions' })
+@ObjectType({ description: 'Position ' })
+@Table({ tableName: 'Positions', createdAt: false, updatedAt: false })
 export class Position extends Model<Position, PositionCreation> {
+  @Field(type => ID)
   @Column({
     primaryKey: true,
     autoIncrement: true,
@@ -16,21 +20,25 @@ export class Position extends Model<Position, PositionCreation> {
     type: DataType.INTEGER,
   })
   id: number;
+  @Field()
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   title: string;
+  @Field()
   @Column({
-    type: DataType.STRING,
+    type: DataTypes.STRING(10000),
     allowNull: false,
   })
   description: string;
+  @Field()
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   location: string;
+  @Field()
   @Column({
     type: DataType.STRING,
     allowNull: false,

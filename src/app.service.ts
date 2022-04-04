@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SpotifyScraper } from './utils/scraper/SpotifyScraper';
+import { SpotifyScraper } from './position/utils/scraper/SpotifyScraper';
 import { Position } from './position/position.model';
 
 @Injectable()
