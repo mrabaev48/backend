@@ -1,0 +1,17 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""Position """
+type Position {
+  id: ID!
+  title: String!
+  description: String!
+  location: String!
+  applyButtonURL: String!
+}
+
+type Query {
+  getPositionById(id: Float!): Position!
+  getAllPositions: [Position!]!
+}

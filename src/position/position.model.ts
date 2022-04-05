@@ -20,24 +20,28 @@ export class Position extends Model<Position, PositionCreation> {
     type: DataType.INTEGER,
   })
   id: number;
+
   @Field()
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   title: string;
+
   @Field()
   @Column({
     type: DataTypes.STRING(10000),
     allowNull: false,
   })
   description: string;
+
   @Field()
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   location: string;
+
   @Field()
   @Column({
     type: DataType.STRING,
