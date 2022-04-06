@@ -57,6 +57,7 @@ export class SpotifyScraper implements IScraper<Promise<Position[]>> {
       const descriptionParts: string[] = [];
       parts.toArray().forEach(part => {
         const isHeadingExists = $('h3', part).toArray().length !== 0;
+
         if (!isHeadingExists) {
           $('div', part).toArray().forEach(x =>{
             descriptionParts.push($(x).text());

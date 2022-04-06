@@ -7,7 +7,6 @@ import {Test} from "@nestjs/testing";
 describe('PositionController', () => {let positionController: PositionController;
     let positionService: PositionService;
     let positionResolver: PositionResolver;
-    let positionRepository: any;
     const mockPosition = {
         "id": 1,
         "title": "Associate Director, Advertising Interfaces & Market Intelligence",
