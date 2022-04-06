@@ -1,6 +1,7 @@
 import { Column, DataType, Table, Model } from 'sequelize-typescript';
 import {DataTypes} from "sequelize";
 import {Field, ID, ObjectType} from "@nestjs/graphql";
+import {Injectable} from "@nestjs/common";
 
 interface PositionCreation {
   title: string;

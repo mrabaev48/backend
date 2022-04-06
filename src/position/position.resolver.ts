@@ -1,8 +1,9 @@
 import {Args, Query, Resolver} from "@nestjs/graphql";
 import {Position} from "./position.model";
 import {PositionService} from "./position.service";
-import {NotFoundException} from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 
+@Injectable()
 @Resolver(of => Position)
 export class PositionResolver {
     constructor(private readonly positionService: PositionService) {}

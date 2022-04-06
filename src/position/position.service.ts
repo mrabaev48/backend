@@ -20,7 +20,7 @@ export class PositionService {
         return await this.positionRepository.create(position);
     }
 
-    async addPositions(positions: Position[]) {
+    async addPositions(positions: Position[]): Promise<Position[]> {
         const resolve = positions.map(position => {
             return this.addPosition(position);
         });
